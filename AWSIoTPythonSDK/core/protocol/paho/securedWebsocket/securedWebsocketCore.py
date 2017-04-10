@@ -116,7 +116,7 @@ class _bufferedWriter:
             self._writingInProgress = True
             self._requestedDataLength = payloadLength
         # Now, write as much as we can
-        lengthWritten = self._sslSocket.write(self._internalBuffer)
+        lengthWritten = self._sslSocket.write(str(self._internalBuffer))
         self._internalBuffer = self._internalBuffer[lengthWritten:]
         # This MQTT packet has been sent out in a wss frame, completely
         if len(self._internalBuffer) == 0:

@@ -265,10 +265,11 @@ def _socketpair_compat():
     """TCP/IP socketpair including Windows support"""
     listensock = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_IP)
     listensock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    listensock.bind(("127.0.0.1", 0))
+    #listensock.bind(("127.0.0.1", 0))          # workaround for getsockname() not returning dynamic port number
+    port = 23456                                # workaround for getsockname() not returning dynamic port number
+    listensock.bind(("127.0.0.1", port))        # workaround for getsockname() not returning dynamic port number
     listensock.listen(1)
-
-    iface, port = listensock.getsockname()
+    #iface, port = listensock.getsockname()     # workaround for getsockname() not returning dynamic port number
     sock1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_IP)
     sock1.setblocking(0)
     try:
@@ -588,8 +589,9 @@ class Client(object):
         if HAVE_SSL is False:
             raise ValueError('This platform has no SSL/TLS.')
 
-        if sys.version < '2.7':
-            raise ValueError('Python 2.7 is the minimum supported version for TLS.')
+        # disable python 2.7 version check
+        #if sys.version < '2.7':
+        #    raise ValueError('Python 2.7 is the minimum supported version for TLS.')
 
         if ca_certs is None:
             raise ValueError('ca_certs must not be None.')
